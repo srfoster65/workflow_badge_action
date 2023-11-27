@@ -1,0 +1,22 @@
+name: test
+
+on:
+  workflow_call:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test badge action
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: create badge
+      uses: srfoster/workflow_badge_action
+      with:
+        label: testing
+        status: passing
+        color: green
+        icon: GitHub
