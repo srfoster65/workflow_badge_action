@@ -1,1 +1,1 @@
-'# Badges branch' 
+# Badges branch
