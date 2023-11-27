@@ -53,6 +53,7 @@ runs:
 
     - name: Prepare environment
       id: prepare_env
+      shell: bash
       run: |
         # Output values to be used by other steps
         echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
@@ -70,6 +71,7 @@ runs:
     - name: Create destination directory
       env:
         BADGE_PATH: ${{ steps.prepare_env.outputs.path }}
+      shell: bash
       run: mkdir -p "${BADGE_PATH%/*}"
 
     - name: Generate the badge SVG image
@@ -92,6 +94,7 @@ runs:
       continue-on-error: true
       env:
         BADGE: ${{ steps.coverage.outputs.path }}
+      shell: bash
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
