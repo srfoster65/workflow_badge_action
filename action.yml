@@ -93,7 +93,7 @@ runs:
     - name: Commit badge
       continue-on-error: true
       env:
-        BADGE: ${{ steps.coverage.outputs.path }}
+        BADGE: ${{ steps.prepare_env.outputs.path }}
       shell: bash
       run: |
         git config --local user.email "action@github.com"
@@ -106,4 +106,4 @@ runs:
       if: ${{ success() }}
       with:
         # github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ steps.coverage.outputs.branch }}
+        branch: ${{ steps.prepare_env.outputs.branch }}
