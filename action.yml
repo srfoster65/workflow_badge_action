@@ -13,7 +13,7 @@ inputs:
     default: 555
   status:
     description: The right text of the badge.
-    # required: true
+    required: true
   color:
     description: Hex or named color for the status
     required: true
@@ -40,7 +40,6 @@ inputs:
 outputs:
   badge:
     description: The badge SVG contents
-    required: false
 
 runs:
   using: composite
@@ -105,111 +104,3 @@ runs:
       with:
         # github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ steps.coverage.outputs.branch }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-name: Workflow Badge Action
-author: srfoster65
-description: Create a json file that can be used to render a status badge for a workflow
-inputs:
-  subject:
-    description: The left text of the badge
-    required: true
-  subject-color:
-    description: Hex or named color for the subject
-    required: true
-    default: 555
-  status:
-    description: The right text of the badge.
-    # required: true
-  status-color:
-    description: Hex or named color for the status
-    # required: true
-    default: blue
-  style:
-    description: Badge style: flat or classic
-    # required: true
-    default: 'classic'
-  icon:
-    description: Use icon
-    required: false
-  # icon-width:
-  #   description: 'Set this if icon is not square'
-  #   required: false
-  #   default: 13
-  # scale:
-  #   description: 'Set badge scale'
-  #   required: true
-  #   default: 1
-  branch:
-    description: The name of the branch.
-    required: true
-    default: main
-# outputs:
-#   badge:
-#     description: 'The badge SVG contents'
-
-# runs:
-#   using: composite
-#   steps:
-#     - run: .src/create_branch.sh
-#       shell: bash
-#   steps:
-#     - run: .src/create_badge_json.sh ${{inputs.subject}} ${{inputs.status}} ${{inputs.colour}} ${{inputs.branch}}
-#       shell: bash
-#   steps:
-#     - run: .src/commit_json.sh
-#       shell: bash
-
-
-
-
-# # action.yaml
-# name: 'Custom GitHub Action'
-# description: 'A GitHub Action that takes an input and returns the square of the number'
-# inputs:
-#   num:
-#     description: 'Enter a number'
-#     required: true
-#     default: "1"
-# outputs:
-#   num_squared:
-#     description: 'Square of the input'
-#     # need to specify the extra `value` field for `composite` actions
-#     value: ${{ steps.get-square.outputs.num_squared }}
-runs:
-  using: 'composite'
-  steps:
-    - name: Install Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'  
-    - name: Install Dependencies
-      run: pip install -r requirements.txt
-      shell: bash
-    # - name: Pass Inputs to Shell
-    #   run: |
-    #           echo "INPUT_NUM=${{ inputs.num }}" >> $GITHUB_ENV
-    #   shell: bash
-    - name: Fetch the number's square
-      id: get-square
-      run: python src/create_badge_json.py
-      shell: bash
-      env:
-        ICON: $${{ inputs.icon }}
-        SUBJECT: $${{ inputs.subject }}
-        SUBJECT_COLOUR: $${{ inputs.subject-colour }}
-        STATUS: $${{ inputs.status }}
-        STATUS_COLOUR: $${{ inputs.status-colour }}
-        STYLE: $${{ inputs.style }}
-        BRANCH: $${{ inputs.branch }}
