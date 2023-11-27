@@ -21,16 +21,16 @@ inputs:
   style:
     description: Badge style: flat or classic
     required: true
-    default: 'classic'
+    default: classic
   icon:
     description: Use icon
     required: false
   icon-width:
-    description: 'Set this if icon is not square'
+    description: Set this if icon is not square
     required: false
     default: 13
   scale:
-    description: 'Set badge scale'
+    description: Set badge scale
     required: true
     default: 1
   path:
@@ -39,7 +39,7 @@ inputs:
     # default: main
 outputs:
   badge:
-    description: 'The badge SVG contents'
+    description: The badge SVG contents
     required: false
 
 runs:
