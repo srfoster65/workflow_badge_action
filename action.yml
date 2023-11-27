@@ -19,7 +19,7 @@ inputs:
     required: true
     default: blue
   style:
-    description: Badge style - flat or classic
+    description: "Badge style: flat or classic"
     required: true
     default: classic
   icon:
