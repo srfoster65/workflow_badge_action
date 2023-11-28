@@ -38,9 +38,9 @@ inputs:
     required: false
     # default: main
   branch:
-  description: Path to use for committing badges
-  required: true
-  default: badges
+    description: Path to use for committing badges
+    required: true
+    default: badges
 outputs:
   badge:
     description: The badge SVG contents
