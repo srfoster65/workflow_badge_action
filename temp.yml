@@ -1,0 +1,215 @@
+# action.yml
+
+name: Workflow Badge Action
+author: srfoster65
+description: Create a workflow badge and commit to badges branch
+inputs:
+  label:
+    description: The left text of the badge
+    required: true
+  label-color:
+    description: Hex or named color for the subject
+    required: true
+    default: 555
+  status:
+    description: The right text of the badge.
+    # required: true
+  color:
+    description: Hex or named color for the status
+    required: true
+    default: blue
+  style:
+    description: Badge style: flat or classic
+    required: true
+    default: 'classic'
+  icon:
+    description: Use icon
+    required: false
+  icon-width:
+    description: 'Set this if icon is not square'
+    required: false
+    default: 13
+  scale:
+    description: 'Set badge scale'
+    required: true
+    default: 1
+  path:
+    description: Save the badge to path.
+    # required: true
+    # default: main
+outputs:
+  badge:
+    description: 'The badge SVG contents'
+    required: false
+
+runs:
+  using: composite
+  steps:
+
+    # Get current banch name to use it as dest directory
+    - name: Extract branch name
+      id: extract_branch
+      shell: bash
+      run: echo "branch=${GITHUB_REF#refs/heads/}" >> "${GITHUB_OUTPUT}"
+
+    - name: Prepare environment
+      id: prepare_env
+      run: |
+        # # Generates a GitHub Workflow output named `lines` with a coverage value
+        # echo "lines=${COVERAGE}" >> "${GITHUB_OUTPUT}"
+        # Output values to be used by other steps
+        echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
+        echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
+      env:
+        BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/S{{ inputs.label }}.svg
+        BRANCH: badges
+
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ steps.prepare_env.outputs.branch }}
+
+    # Create the directory where badges will be saved, if needed
+    - name: Create destination directory
+      env:
+        BADGE_PATH: ${{ steps.prepare_env.outputs.path }}
+      run: mkdir -p "${BADGE_PATH%/*}"
+
+    - name: Generate the badge SVG image
+      uses: emibcn/badge-action@v2.0.2
+      id: create_badge
+      with:
+        label: ${{ inputs.label }}
+        status: ${{ inputs.status }}
+        color: ${{ inputs.color }}
+        path: ${{ steps.coverage.outputs.path }}
+
+    - name: Upload badge as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: badge
+        path: ${{ steps.coverage.outputs.path }}
+        if-no-files-found: error
+
+    - name: Commit badge
+      continue-on-error: true
+      env:
+        BADGE: ${{ steps.coverage.outputs.path }}
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add "${BADGE}"
+        git commit -m "Add/Update badge"
+    - name: Push badge commit
+      uses: ad-m/github-push-action@master
+      if: ${{ success() }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ steps.coverage.outputs.branch }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+name: Workflow Badge Action
+author: srfoster65
+description: Create a json file that can be used to render a status badge for a workflow
+inputs:
+  subject:
+    description: The left text of the badge
+    required: true
+  subject-color:
+    description: Hex or named color for the subject
+    required: true
+    default: 555
+  status:
+    description: The right text of the badge.
+    # required: true
+  status-color:
+    description: Hex or named color for the status
+    # required: true
+    default: blue
+  style:
+    description: Badge style: flat or classic
+    # required: true
+    default: 'classic'
+  icon:
+    description: Use icon
+    required: false
+  # icon-width:
+  #   description: 'Set this if icon is not square'
+  #   required: false
+  #   default: 13
+  # scale:
+  #   description: 'Set badge scale'
+  #   required: true
+  #   default: 1
+  branch:
+    description: The name of the branch.
+    required: true
+    default: main
+# outputs:
+#   badge:
+#     description: 'The badge SVG contents'
+
+# runs:
+#   using: composite
+#   steps:
+#     - run: .src/create_branch.sh
+#       shell: bash
+#   steps:
+#     - run: .src/create_badge_json.sh ${{inputs.subject}} ${{inputs.status}} ${{inputs.colour}} ${{inputs.branch}}
+#       shell: bash
+#   steps:
+#     - run: .src/commit_json.sh
+#       shell: bash
+
+
+
+
+# # action.yaml
+# name: 'Custom GitHub Action'
+# description: 'A GitHub Action that takes an input and returns the square of the number'
+# inputs:
+#   num:
+#     description: 'Enter a number'
+#     required: true
+#     default: "1"
+# outputs:
+#   num_squared:
+#     description: 'Square of the input'
+#     # need to specify the extra `value` field for `composite` actions
+#     value: ${{ steps.get-square.outputs.num_squared }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'  
+    - name: Install Dependencies
+      run: pip install -r requirements.txt
+      shell: bash
+    # - name: Pass Inputs to Shell
+    #   run: |
+    #           echo "INPUT_NUM=${{ inputs.num }}" >> $GITHUB_ENV
+    #   shell: bash
+    - name: Fetch the number's square
+      id: get-square
+      run: python src/create_badge_json.py
+      shell: bash
+      env:
+        ICON: $${{ inputs.icon }}
+        SUBJECT: $${{ inputs.subject }}
+        SUBJECT_COLOUR: $${{ inputs.subject-colour }}
+        STATUS: $${{ inputs.status }}
+        STATUS_COLOUR: $${{ inputs.status-colour }}
+        STYLE: $${{ inputs.style }}
+        BRANCH: $${{ inputs.branch }}
