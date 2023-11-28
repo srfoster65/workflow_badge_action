@@ -18,7 +18,7 @@ jobs:
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
       with:
-        label: testing
+        label: test
         status: passing
         color: green
         icon: github
