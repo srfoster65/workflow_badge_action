@@ -37,6 +37,10 @@ inputs:
     description: Save the badge to path.
     required: false
     # default: main
+  branch:
+  description: Path to use for committing badges
+  required: true
+  default: badges
 outputs:
   badge:
     description: The badge SVG contents
@@ -57,14 +61,16 @@ runs:
       shell: bash
       run: |
         # Output values to be used by other steps
+        # path is the full path (incl. filename) of the badge
         echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
+        # branch is destination branch - defaults of "badges"
         echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
         BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
-        BRANCH: badges
+        BRANCH: ${{ inputs.branch }}
 
     - uses: actions/checkout@v4
-      # This step will fail if badges branch does not exist
+      # This step will fail if badge commit branch does not exist
       with:
         ref: ${{ steps.prepare_env.outputs.branch }}
 
@@ -82,6 +88,7 @@ runs:
         label: ${{ inputs.label }}
         status: ${{ inputs.status }}
         color: ${{ inputs.color }}
+        icon: ${{ inputs.icon }}
         path: ${{ steps.prepare_env.outputs.path }}
 
     - name: Upload badge as artifact
