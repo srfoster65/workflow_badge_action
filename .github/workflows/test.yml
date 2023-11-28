@@ -2,8 +2,9 @@ name: test
 
 on:
   push:
-    tags-ignore:
-        - '*'
+    branches:
+    - '*'
+    - '!badges'
   workflow_dispatch:
   
 jobs:
