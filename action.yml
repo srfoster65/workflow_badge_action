@@ -52,6 +52,7 @@ runs:
       run: echo "branch=${GITHUB_REF#refs/heads/}" >> "${GITHUB_OUTPUT}"
 
     - name: Prepare environment
+      # This step defines the branch and path to use for committing the badge
       id: prepare_env
       shell: bash
       run: |
@@ -59,7 +60,7 @@ runs:
         echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
         echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
-        BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/S{{ inputs.label }}.svg
+        BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
         BRANCH: badges
 
     - uses: actions/checkout@v4
@@ -105,5 +106,5 @@ runs:
       uses: ad-m/github-push-action@master
       if: ${{ success() }}
       with:
-        # github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ steps.prepare_env.outputs.branch }}
