@@ -1,10 +1,11 @@
 name: test
 
 on:
-  workflow_call:
   push:
+    tags-ignore:
+        - '*'
   workflow_dispatch:
-
+  
 jobs:
   test:
     name: test badge action
@@ -14,9 +15,9 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: create badge
-      uses: srfoster65/workflow_badge_action@v1
+      uses: srfoster65/workflow_badge_action@main
       with:
         label: testing
         status: passing
         color: green
-        icon: GitHub
+        icon: github
