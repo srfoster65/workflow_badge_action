@@ -1,0 +1,3 @@
+# Requirements file for python
+
+requests==2.31.0
