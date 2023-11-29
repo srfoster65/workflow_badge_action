@@ -71,8 +71,8 @@ runs:
 
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
-      with:
-        ref: ${{ steps.prepare_env.outputs.branch }}
+      # with:
+      #   ref: ${{ steps.prepare_env.outputs.branch }}
 
     # Create the directory where badges will be saved, if needed
     - name: Create destination directory
@@ -94,6 +94,11 @@ runs:
       run: |
         pip install -r requirements.txt
         python src\create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+
+    - uses: actions/checkout@v4
+      # This step will fail if badge commit branch does not exist
+      with:
+        ref: ${{ steps.prepare_env.outputs.branch }}
 
 
     # - name: Generate the badge SVG image
