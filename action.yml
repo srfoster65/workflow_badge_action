@@ -90,10 +90,10 @@ runs:
 
     - name: Generate the badge SVG image
       id: create_badge
+      shell: bash
       run: |
         pip install -r requirements.txt
         python src\create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
-
 
 
     # - name: Generate the badge SVG image
