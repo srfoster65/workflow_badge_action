@@ -16,5 +16,5 @@
     <text x="524" y="148" textLength="418" fill="#000" opacity="0.25">passing</text>
     <text x="514" y="138" textLength="418">passing</text>
   </g>
-  <image x="40" y="35" width="130" height="130" xlink:href="https://raw.githubusercontent.com/badgen/badgen-icons/master/icons/github.svg"/>
+  <image x="40" y="35" width="130" height="130" xlink:href="icons/github.svg"/>
 </svg>
