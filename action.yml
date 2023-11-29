@@ -37,8 +37,8 @@ inputs:
     description: Save the badge to path.
     required: false
     # default: main
-  branch:
-    description: Path to use for committing badges
+  badges_branch:
+    description: Allow overriding default branch used to store badges
     required: true
     default: badges
 outputs:
@@ -49,7 +49,7 @@ runs:
   using: composite
   steps:
 
-    # Get current banch name to use it as dest directory
+    # Get current banch name (for use as dest directory when committing badge)
     - name: Extract branch name
       id: extract_branch
       shell: bash
@@ -67,7 +67,7 @@ runs:
         echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
         BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
-        BRANCH: ${{ inputs.branch }}
+        BRANCH: ${{ inputs.badges_branch }}
 
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
@@ -82,14 +82,27 @@ runs:
       run: mkdir -p "${BADGE_PATH%/*}"
 
     - name: Generate the badge SVG image
-      uses: emibcn/badge-action@v2.0.2
       id: create_badge
+      uses: actions/setup-python@v4
+
       with:
-        label: ${{ inputs.label }}
-        status: ${{ inputs.status }}
-        color: ${{ inputs.color }}
-        icon: ${{ inputs.icon }}
-        path: ${{ steps.prepare_env.outputs.path }}
+        python-version: '3.11' 
+          cache: 'pip' # caching pip dependencies
+      run: |
+        pip install -r requirements.txt
+        python src\create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+
+
+
+    # - name: Generate the badge SVG image
+    #   uses: emibcn/badge-action@v2.0.2
+    #   id: create_badge
+    #   with:
+    #     label: ${{ inputs.label }}
+    #     status: ${{ inputs.status }}
+    #     color: ${{ inputs.color }}
+    #     icon: ${{ inputs.icon }}
+    #     path: ${{ steps.prepare_env.outputs.path }}
 
     - name: Upload badge as artifact
       uses: actions/upload-artifact@v3
