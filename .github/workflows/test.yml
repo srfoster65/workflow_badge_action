@@ -21,4 +21,5 @@ jobs:
         label: test
         status: passing
         color: green
-        icon: https://raw.githubusercontent.com/badgen/badgen-icons/master/icons/github.svg
+        # icon: https://raw.githubusercontent.com/badgen/badgen-icons/master/icons/github.svg
+        icon: icons/github.svg
