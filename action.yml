@@ -93,7 +93,7 @@ runs:
       shell: bash
       run: |
         pip install -r requirements.txt
-        python src\create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+        python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
 
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
