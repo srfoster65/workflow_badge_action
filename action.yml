@@ -81,13 +81,15 @@ runs:
       shell: bash
       run: mkdir -p "${BADGE_PATH%/*}"
 
-    - name: Generate the badge SVG image
-      id: create_badge
+    - name: install python
+      id: install_python
       uses: actions/setup-python@v4
-
       with:
         python-version: '3.11' 
         cache: 'pip' # caching pip dependencies
+
+    - name: Generate the badge SVG image
+      id: create_badge
       run: |
         pip install -r requirements.txt
         python src\create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
