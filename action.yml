@@ -92,12 +92,15 @@ runs:
 
     - run python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
 
-    # - name: Generate the badge SVG image
-    #   id: create_badge
-    #   shell: bash
-    #   run: |
-    #     pip install -r requirements.txt
-    #     python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+    - name: install requirements
+      shell: bash
+      run: pip install -r requirements.txt
+
+    - name: Generate the badge SVG image
+      id: create_badge
+      shell: bash
+      run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+
 
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
