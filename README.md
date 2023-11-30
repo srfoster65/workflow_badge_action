@@ -23,3 +23,7 @@ Use the following markdown in README.md to render a badge named test, on main.
 ![svg badge](https://raw.githubusercontent.com/srfoster65/workflow_badge_action/badges/main/test.svg)
 
 This action uses [badge-action](https://github.com/marketplace/actions/badge-action) to generate the svg image.
+
+The colors you can use with query param: ?color=[colorname]
+
+blue cyan green yellow orange red pink purple grey black
