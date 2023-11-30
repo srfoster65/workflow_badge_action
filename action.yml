@@ -49,6 +49,11 @@ runs:
   using: composite
   steps:
 
+    - uses: actions/checkout@v4
+      # This step will fail if badge commit branch does not exist
+      # with:
+      #   ref: ${{ steps.prepare_env.outputs.branch }}
+
     # Get current banch name (for use as dest directory when committing badge)
     - name: Extract branch name
       id: extract_branch
@@ -69,11 +74,6 @@ runs:
         BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
         BRANCH: ${{ inputs.badges_branch }}
 
-    - uses: actions/checkout@v4
-      # This step will fail if badge commit branch does not exist
-      # with:
-      #   ref: ${{ steps.prepare_env.outputs.branch }}
-
     # Create the directory where badges will be saved, if needed
     - name: Create destination directory
       env:
@@ -88,12 +88,16 @@ runs:
         python-version: '3.11' 
         cache: 'pip' # caching pip dependencies
 
-    - name: Generate the badge SVG image
-      id: create_badge
-      shell: bash
-      run: |
-        pip install -r requirements.txt
-        python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+    - run pip install -r requirements.txt
+
+    - run python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+
+    # - name: Generate the badge SVG image
+    #   id: create_badge
+    #   shell: bash
+    #   run: |
+    #     pip install -r requirements.txt
+    #     python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
 
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
