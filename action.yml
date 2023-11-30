@@ -64,6 +64,15 @@ runs:
       shell: bash
       run: ls -al
 
+    - uses: actions/checkout@v4
+      # This step will fail if badge commit branch does not exist
+      with:
+        ref: ${{ steps.prepare_env.outputs.branch }}
+
+    - name: debug1
+      shell: bash
+      run: ls -al
+
     - name: Prepare environment
       # This step defines the branch and path to use for committing the badge
       id: prepare_env
@@ -101,10 +110,10 @@ runs:
       shell: bash
       run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
 
-    - uses: actions/checkout@v4
-      # This step will fail if badge commit branch does not exist
-      with:
-        ref: ${{ steps.prepare_env.outputs.branch }}
+    # - uses: actions/checkout@v4
+    #   # This step will fail if badge commit branch does not exist
+    #   with:
+    #     ref: ${{ steps.prepare_env.outputs.branch }}
 
     # - name: Generate the badge SVG image
     #   uses: emibcn/badge-action@v2.0.2
