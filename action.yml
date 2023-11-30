@@ -10,7 +10,7 @@ inputs:
   label-color:
     description: Hex or named color for the subject
     required: true
-    default: 555
+    default: grey
   status:
     description: The right text of the badge.
     required: true
@@ -49,7 +49,7 @@ runs:
   using: composite
   steps:
 
-    - uses: actions/checkout@v4
+    # - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
       # with:
       #   ref: ${{ steps.prepare_env.outputs.branch }}
@@ -59,6 +59,10 @@ runs:
       id: extract_branch
       shell: bash
       run: echo "branch=${GITHUB_REF#refs/heads/}" >> "${GITHUB_OUTPUT}"
+
+    - name: debug
+      shell: bash
+      run: ls -al
 
     - name: Prepare environment
       # This step defines the branch and path to use for committing the badge
@@ -97,12 +101,10 @@ runs:
       shell: bash
       run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
 
-
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
       with:
         ref: ${{ steps.prepare_env.outputs.branch }}
-
 
     # - name: Generate the badge SVG image
     #   uses: emibcn/badge-action@v2.0.2
