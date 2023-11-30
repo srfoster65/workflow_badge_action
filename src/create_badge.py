@@ -73,11 +73,12 @@ def get_badgen_badge(args):
     url = f"{BADGEN_URL}/{args.label}/{args.status}/{colour}"
     params = {'icon': args.icon}
     response = requests.get(url, params=params)
-    logger.info("URL: %s", response.url)
+    logger.info("Fetching badge from: %s", response.url)
     return response.text
 
 
 def write_badge(path, badge_svg):
+    logger.info("Saving badge to: %s", path)
     with open(path, "w", encoding="utf-8") as fp:
         fp.write(badge_svg)
 
