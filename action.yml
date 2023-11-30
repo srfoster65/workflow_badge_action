@@ -88,10 +88,6 @@ runs:
         python-version: '3.11' 
         cache: 'pip' # caching pip dependencies
 
-    - run pip install -r requirements.txt
-
-    - run python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
-
     - name: install requirements
       shell: bash
       run: pip install -r requirements.txt
