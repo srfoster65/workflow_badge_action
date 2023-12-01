@@ -169,3 +169,4 @@ runs:
       with:
         # github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ steps.prepare_env.outputs.branch }}
+        force: true
