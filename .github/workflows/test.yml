@@ -15,8 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Dump context
-      uses: crazy-max/ghaction-dump-context@v2
+    # - name: Dump context
+    #   uses: crazy-max/ghaction-dump-context@v2
 
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
@@ -24,5 +24,4 @@ jobs:
         label: test
         status: passing
         color: green
-        # icon: https://raw.githubusercontent.com/badgen/badgen-icons/master/icons/github.svg
         icon: github
