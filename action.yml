@@ -148,11 +148,6 @@ runs:
         if-no-files-found: error
 
 
-    - uses: actions/checkout@v4
-      # checkout badges branch
-      with:
-        ref: badges 
-
 
 
     - name: Commit badge
