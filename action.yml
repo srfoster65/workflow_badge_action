@@ -74,7 +74,8 @@ runs:
     - uses: actions/checkout@v4
       # This step will fail if badge commit branch does not exist
       with:
-        ref: ${{ steps.prepare_env.outputs.branch }}
+        # ref: ${{ steps.prepare_env.outputs.branch }}
+        ref: badges
 
     - name: debug1
       shell: bash
