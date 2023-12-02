@@ -71,12 +71,6 @@ runs:
       shell: bash
       run: ls -al
 
-    - uses: actions/checkout@v4
-      # This step will fail if badge commit branch does not exist
-      with:
-        # ref: ${{ steps.prepare_env.outputs.branch }}
-        ref: badges
-
     - name: debug1
       shell: bash
       run: ls -al
@@ -120,6 +114,14 @@ runs:
     - name: install requirements
       shell: bash
       run: pip install -r requirements.txt
+
+
+    - uses: actions/checkout@v4
+      # This step will fail if badge commit branch does not exist
+      with:
+        # ref: ${{ steps.prepare_env.outputs.branch }}
+        ref: badges
+
 
     - name: Generate the badge SVG image
       id: create_badge
