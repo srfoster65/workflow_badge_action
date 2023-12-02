@@ -82,9 +82,9 @@ runs:
       run: ls -al
 
 
-    - name: debug2
-      shell: bash
-      run: ls -al src
+    # - name: debug2
+    #   shell: bash
+    #   run: ls -al src
 
     # - name: Dump context
     #   uses: crazy-max/ghaction-dump-context@v2
