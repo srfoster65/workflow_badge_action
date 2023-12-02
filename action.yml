@@ -160,11 +160,13 @@ runs:
         git config --local user.name "GitHub Action"
         git add "${BADGE}"
         git commit -m "Add/Update badge"
+        git pull
+        git push
 
-    - name: Push badge commit
-      uses: ad-m/github-push-action@master
-      if: ${{ success() }}
-      with:
-        # github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ steps.prepare_env.outputs.branch }}
-        # force: true
+    # - name: Push badge commit
+    #   uses: ad-m/github-push-action@master
+    #   if: ${{ success() }}
+    #   with:
+    #     # github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     branch: ${{ steps.prepare_env.outputs.branch }}
+    #     # force: true
