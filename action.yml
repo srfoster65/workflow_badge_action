@@ -50,10 +50,10 @@ runs:
   steps:
 
 
-    - uses: actions/checkout@v4
-      # checkout badges branch to path: badges
-      with:
-        path: badges 
+    # - uses: actions/checkout@v4
+    #   # checkout badges branch to path: badges
+    #   with:
+    #     path: badges 
 
 
     # - uses: actions/checkout@v4
@@ -148,7 +148,10 @@ runs:
         if-no-files-found: error
 
 
-
+    - uses: actions/checkout@v4
+      # checkout badges branch
+      with:
+        ref: badges 
 
 
 
