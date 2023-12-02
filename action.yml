@@ -85,8 +85,8 @@ runs:
       shell: bash
       run: ls -al src
 
-    - name: Dump context
-      uses: crazy-max/ghaction-dump-context@v2
+    # - name: Dump context
+    #   uses: crazy-max/ghaction-dump-context@v2
 
     - name: Prepare environment
       # This step defines the branch and path to use for committing the badge
