@@ -94,7 +94,7 @@ runs:
         # branch is destination branch - defaults of "badges"
         echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
-        BADGE_PATH: badges/${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
+        BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
         BRANCH: ${{ inputs.badges_branch }}
 
     # Create the directory where badges will be saved, if needed
@@ -146,6 +146,13 @@ runs:
     # If you need to, you can check out your repo to a different location
 
 
+
+    - uses: actions/checkout@v4
+      with:
+        ref: badges
+
+
+
     - name: Create destination directory
       env:
         BADGE_PATH: ${{ steps.prepare_env.outputs.path }}
@@ -153,10 +160,6 @@ runs:
       run: mkdir -p "${BADGE_PATH%/*}"
 
 
-
-    - uses: actions/checkout@v4
-      with:
-        ref: badges
 
     - name: write_to_file
       shell: bash
