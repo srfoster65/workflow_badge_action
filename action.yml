@@ -25,6 +25,7 @@ inputs:
   icon:
     description: Use icon
     required: false
+    default: github
   icon-width:
     description: Set this if icon is not square
     required: false
@@ -33,76 +34,34 @@ inputs:
     description: Set badge scale
     required: true
     default: 1
-  path:
-    description: Save the badge to path.
-    required: false
-    # default: main
   badges_branch:
     description: Allow overriding default branch used to store badges
     required: true
     default: badges
-outputs:
-  badge:
-    description: The badge SVG contents
 
 runs:
   using: composite
   steps:
 
-
-    # - uses: actions/checkout@v4
-    #   # checkout badges branch to path: badges
-    #   with:
-    #     path: badges 
-
-
-    # - uses: actions/checkout@v4
-      # This step will fail if badge commit branch does not exist
-      # with:
-      #   ref: ${{ steps.prepare_env.outputs.branch }}
-
     # Get current banch name (for use as dest directory when committing badge)
-    - name: Extract branch name
+    - name: Extract working branch name
       id: extract_branch
       shell: bash
-      run: echo "branch=${GITHUB_REF#refs/heads/}" >> "${GITHUB_OUTPUT}"
+      run: echo "working_branch=${GITHUB_REF#refs/heads/}" >> "${GITHUB_OUTPUT}"
 
-    - name: debug
-      shell: bash
-      run: ls -al
-
-    - name: debug1
-      shell: bash
-      run: ls -al
-
-
-    # - name: debug2
-    #   shell: bash
-    #   run: ls -al src
-
-    # - name: Dump context
-    #   uses: crazy-max/ghaction-dump-context@v2
-
-    - name: Prepare environment
-      # This step defines the branch and path to use for committing the badge
-      id: prepare_env
+    - name: Get Badge Info
+      # This step defines the badges branch and full path to use for committing the badge
+      id: badge_info
       shell: bash
       run: |
         # Output values to be used by other steps
         # path is the full path (incl. filename) of the badge
-        echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
+        echo "badge_path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
         # branch is destination branch - defaults of "badges"
         echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
-        BADGE_PATH: ${{ steps.extract_branch.outputs.branch }}/${{ inputs.label }}.svg
-        BRANCH: ${{ inputs.badges_branch }}
-
-    # Create the directory where badges will be saved, if needed
-    - name: Create destination directory
-      env:
-        BADGE_PATH: ${{ steps.prepare_env.outputs.path }}
-      shell: bash
-      run: mkdir -p "${BADGE_PATH%/*}"
+        BADGE_PATH: ${{ steps.extract_branch.outputs.working_branch }}/${{ inputs.label }}.svg
+        BADGES_BRANCH: ${{ inputs.badges_branch }}
 
     - name: install python
       id: install_python
@@ -116,87 +75,44 @@ runs:
       run: pip install -r requirements.txt
 
     - name: Generate the badge SVG image
+      # Badge svg can accessed as steps.create_badge.outputs.badge
       id: create_badge
       shell: bash
       run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }}
 
-
-    # - uses: actions/checkout@v4
-    #   # This step will fail if badge commit branch does not exist
-    #   with:
-    #     # ref: ${{ steps.prepare_env.outputs.branch }}
-    #     ref: badges
-
-
-    # - uses: actions/checkout@v4
-    #   # This step will fail if badge commit branch does not exist
-    #   with:
-    #     ref: ${{ steps.prepare_env.outputs.branch }}
-
-    # - name: Generate the badge SVG image
-    #   uses: emibcn/badge-action@v2.0.2
-    #   id: create_badge
-    #   with:
-    #     label: ${{ inputs.label }}
-    #     status: ${{ inputs.status }}
-    #     color: ${{ inputs.color }}
-    #     icon: ${{ inputs.icon }}
-    #     path: ${{ steps.prepare_env.outputs.path }}
-
-    # If you need to, you can check out your repo to a different location
-
-
-
     - uses: actions/checkout@v4
+      # Checkout the badges_branch
       with:
         ref: badges
 
-
-
     - name: Create destination directory
+      # Create a destination directory for the badge.
       env:
-        BADGE_PATH: ${{ steps.prepare_env.outputs.path }}
+        BADGE_PATH: ${{ steps.badge_info.outputs.badge_path }}
       shell: bash
       run: mkdir -p "${BADGE_PATH%/*}"
 
-
-
     - name: write_to_file
+      # Save the badge svg to file
       shell: bash
-      run: printf '%s\n' '${{ steps.create_badge.outputs.badge }}' > ${{ steps.prepare_env.outputs.path }}
-      # run: cat ${{ steps.create_badge.outputs.badge }} > ${{ steps.prepare_env.outputs.path }}
-
+      run: printf '%s\n' '${{ steps.create_badge.outputs.badge }}' > ${{ steps.badge_info.outputs.badge_path }}
 
     - name: Upload badge as artifact
       uses: actions/upload-artifact@v3
       with:
         name: badge
-        path: ${{ steps.prepare_env.outputs.path }}
+        path: ${{ steps.badge_info.outputs.badge_path }}
         if-no-files-found: error
 
     - uses: EndBug/add-and-commit@v9
+      # Commit the badge
       with:
         message: "Add/Update badge"
-        add: ${{ steps.prepare_env.outputs.path }}
-
-
-    # - name: Commit badge
-    #   continue-on-error: true
-    #   env:
-    #     BADGE: ${{ steps.prepare_env.outputs.path }}
-    #   shell: bash
-    #   run: |
-    #     git config --local user.email "action@github.com"
-    #     git config --local user.name "GitHub Action"
-    #     git add "${BADGE}"
-    #     git commit -m "Add/Update badge"
-    #     git pull
-    #     git push
+        add: ${{ steps.badge_info.outputs.badge_path }}
 
     - name: Push badge commit
+      # Push the badge to origin on the badges branch
       uses: ad-m/github-push-action@master
       if: ${{ success() }}
       with:
-        # github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ steps.prepare_env.outputs.branch }}
-        # force: true
+        branch: ${{ steps.badge_info.outputs.badges_branch }}
