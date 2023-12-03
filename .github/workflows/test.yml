@@ -15,13 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Dump context
-    #   uses: crazy-max/ghaction-dump-context@v2
+    - name: Dummy step
+      id: dummy
+      shell: bash
+      run: echo "Hello World"
 
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
       with:
-        label: new
-        status: passing
-        color: green
-        icon: github
+        label: echo
+        status: ${{ steps.dummy.outcome }}
