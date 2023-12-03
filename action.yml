@@ -54,11 +54,11 @@ runs:
       id: badge_info
       shell: bash
       run: |
-        # Output values to be used by other steps
+        # Output values to be used by other steps of the workflow
         # path is the full path (incl. filename) of the badge
         echo "badge_path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
-        # branch is destination branch - defaults of "badges"
-        echo "badges_branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
+        # badges_branch is destination branch - default: badges
+        echo "badges_branch=${BADGES_BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
         BADGE_PATH: ${{ steps.extract_branch.outputs.working_branch }}/${{ inputs.label }}.svg
         BADGES_BRANCH: ${{ inputs.badges_branch }}
