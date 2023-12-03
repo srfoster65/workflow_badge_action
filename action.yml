@@ -150,7 +150,7 @@ runs:
 
     - name: write_to_file
       shell: bash
-      run: printf '%s\n' "${{ steps.create_badge.outputs.badge }}" > ${{ steps.prepare_env.outputs.path }}
+      run: printf '%s\n' ${{ steps.create_badge.outputs.badge }} > ${{ steps.prepare_env.outputs.path }}
       # run: cat ${{ steps.create_badge.outputs.badge }} > ${{ steps.prepare_env.outputs.path }}
 
     - name: Upload badge as artifact
