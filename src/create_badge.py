@@ -9,11 +9,11 @@ import logging
 import uuid
 
 
-OUTCOME_COLOUR_MAP = {
-    "success": "green",
-    "failure": "red",
-    "cancelled": "grey",
-    "skipped": "grey",
+OUTCOME_MAP = {
+    "success": {"status": "Passing", "colour": "green"},
+    "failure": {"status": "Failing", "colour": "red"},
+    "cancelled": {"status": "cancelled", "colour": "grey"},
+    "skipped": {"status": "skipped", "colour": "grey"},
 }
 
 
@@ -67,9 +67,9 @@ def get_badge_colour(args):
     if args.colour:
         logger.info("Colour param provided")
         colour = args.colour
-    elif args.status in OUTCOME_COLOUR_MAP:
+    elif args.status in OUTCOME_MAP:
         logger.info("Deriving colour from Status value")
-        colour = OUTCOME_COLOUR_MAP[args.status]
+        colour = OUTCOME_MAP[args.status]["colour"]
     else:
         logger.info("Using default colour")
         colour = "blue"
@@ -77,10 +77,20 @@ def get_badge_colour(args):
     return colour
 
 
+def get_badge_status(args):
+    """Return background colour for status part of badge."""
+    if args.status in OUTCOME_MAP:
+        logger.info("Deriving badge status from status")
+        return OUTCOME_MAP[args.status]["status"]
+    logger.info("Using supplied status: %s", args.status)
+    return args.status
+
+
 def get_badgen_badge(args):
     """Generate badge from badgen.net"""
     colour = get_badge_colour(args)
-    url = f"{BADGEN_URL}/{args.label}/{args.status}/{colour}"
+    status = get_badge_status(args)
+    url = f"{BADGEN_URL}/{args.label}/{status}/{colour}"
     params = {"icon": args.icon}
     response = requests.get(url, params=params)
     logger.info("Fetching badge from: %s", response.url)
