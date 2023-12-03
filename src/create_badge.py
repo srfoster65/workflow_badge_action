@@ -95,16 +95,16 @@ def write_env_data(fh, name, value):
 
 
 def set_multiline_output(name, value):
-    if GITHUB_OUTPUT not in environ:
-        output_file = "test.tmp" #TODO
-
-        logger.info("GITHIB_OUTPUT not set. Using temp file:")
+    if GITHUB_OUTPUT in environ:
+        output_file = environ[GITHUB_OUTPUT]
     else:
-                output_file = environ[GITHUB_OUTPUT]
+        # For debugging outside of github
+        output_file = "test.tmp"
+        logger.info("GITHIB_OUTPUT not set. Using temp file:")
     logger.info("Writing badge to: %s", output_file)
-
     with open(output_file, "a") as fh:
         write_env_data(fh, name, value)
+
 
 def write_badge(path, badge_svg):
     logger.info("Saving badge to: %s", path)
