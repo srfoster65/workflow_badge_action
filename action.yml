@@ -118,14 +118,14 @@ runs:
     - name: Generate the badge SVG image
       id: create_badge
       shell: bash
-      run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -p ${{ steps.prepare_env.outputs.path }}
+      run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }}
 
 
-    - uses: actions/checkout@v4
-      # This step will fail if badge commit branch does not exist
-      with:
-        # ref: ${{ steps.prepare_env.outputs.branch }}
-        ref: badges
+    # - uses: actions/checkout@v4
+    #   # This step will fail if badge commit branch does not exist
+    #   with:
+    #     # ref: ${{ steps.prepare_env.outputs.branch }}
+    #     ref: badges
 
 
     # - uses: actions/checkout@v4
@@ -143,6 +143,15 @@ runs:
     #     icon: ${{ inputs.icon }}
     #     path: ${{ steps.prepare_env.outputs.path }}
 
+    # If you need to, you can check out your repo to a different location
+    - uses: actions/checkout@v4
+      with:
+        ref: badges
+
+    - name: write_to_file
+      shell: bash
+      run: echo ${{ steps.create_badge.outputs.badge }} >> ${{ steps.prepare_env.outputs.path }}
+
     - name: Upload badge as artifact
       uses: actions/upload-artifact@v3
       with:
@@ -150,26 +159,29 @@ runs:
         path: ${{ steps.prepare_env.outputs.path }}
         if-no-files-found: error
 
+    - uses: EndBug/add-and-commit@v9
+      with:
+        message: "Add/Update badge"
+        add: ${{ steps.prepare_env.outputs.path }}
 
 
+    # - name: Commit badge
+    #   continue-on-error: true
+    #   env:
+    #     BADGE: ${{ steps.prepare_env.outputs.path }}
+    #   shell: bash
+    #   run: |
+    #     git config --local user.email "action@github.com"
+    #     git config --local user.name "GitHub Action"
+    #     git add "${BADGE}"
+    #     git commit -m "Add/Update badge"
+    #     git pull
+    #     git push
 
-    - name: Commit badge
-      continue-on-error: true
-      env:
-        BADGE: ${{ steps.prepare_env.outputs.path }}
-      shell: bash
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add "${BADGE}"
-        git commit -m "Add/Update badge"
-        git pull
-        git push
-
-    # - name: Push badge commit
-    #   uses: ad-m/github-push-action@master
-    #   if: ${{ success() }}
-    #   with:
-    #     # github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     branch: ${{ steps.prepare_env.outputs.branch }}
-    #     # force: true
+    - name: Push badge commit
+      uses: ad-m/github-push-action@master
+      if: ${{ success() }}
+      # with:
+      #   # github_token: ${{ secrets.GITHUB_TOKEN }}
+      #   branch: ${{ steps.prepare_env.outputs.branch }}
+      #   # force: true

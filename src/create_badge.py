@@ -3,8 +3,10 @@ Script to construct and call a Badgen URL and fetch the resultant badge svg data
 """
 
 from argparse import ArgumentParser
+from os import environ
 import requests
 import logging
+import uuid
 
 
 OUTCOME_COLOUR_MAP = {
@@ -15,6 +17,7 @@ OUTCOME_COLOUR_MAP = {
 }
 
 
+ACTION_OUTPUT = "badge"
 BADGEN_URL = "http://badgen.net/badge"
 logger = logging.getLogger(__name__)
 
@@ -77,6 +80,15 @@ def get_badgen_badge(args):
     return response.text
 
 
+def set_multiline_output(name, value):
+    logger.info("%s=%s", name, value)
+    with open(environ["GITHUB_OUTPUT"], "a") as fh:
+        delimiter = uuid.uuid1()
+        print(f"{name}<<{delimiter}", file=fh)
+        print(value, file=fh)
+        print(delimiter, file=fh)
+
+
 def write_badge(path, badge_svg):
     logger.info("Saving badge to: %s", path)
     with open(path, "w", encoding="utf-8") as fp:
@@ -87,7 +99,10 @@ def main():
     logging.basicConfig(level=logging.INFO)
     args = process_command_line_arguments()
     badge_svg = get_badgen_badge(args)
-    write_badge(args.path, badge_svg)
+    if args.path:
+        write_badge(args.path, badge_svg)
+    else:
+        set_multiline_output(ACTION_OUTPUT, badge_svg)
 
 if __name__ == "__main__":
     main()
