@@ -58,7 +58,7 @@ runs:
         # path is the full path (incl. filename) of the badge
         echo "badge_path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
         # branch is destination branch - defaults of "badges"
-        echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
+        echo "badges_branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
       env:
         BADGE_PATH: ${{ steps.extract_branch.outputs.working_branch }}/${{ inputs.label }}.svg
         BADGES_BRANCH: ${{ inputs.badges_branch }}
@@ -83,7 +83,7 @@ runs:
     - uses: actions/checkout@v4
       # Checkout the badges_branch
       with:
-        ref: badges
+        ref: ${{ steps.badge_info.outputs.badges_branch }}
 
     - name: Create destination directory
       # Create a destination directory for the badge.
