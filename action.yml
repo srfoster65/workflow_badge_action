@@ -144,6 +144,16 @@ runs:
     #     path: ${{ steps.prepare_env.outputs.path }}
 
     # If you need to, you can check out your repo to a different location
+
+
+    - name: Create destination directory
+      env:
+        BADGE_PATH: ${{ steps.prepare_env.outputs.path }}
+      shell: bash
+      run: mkdir -p "${BADGE_PATH%/*}"
+
+
+
     - uses: actions/checkout@v4
       with:
         ref: badges
