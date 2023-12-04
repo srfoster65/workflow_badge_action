@@ -76,7 +76,7 @@ runs:
 
     - name: install requirements
       shell: bash
-      run: pip install -r requirements.txt
+      run: pip install -r "${{ github.action_path }}/requirements.txt"
 
     - name: Generate the badge SVG image
       # Badge svg can accessed as steps.create_badge.outputs.badge
