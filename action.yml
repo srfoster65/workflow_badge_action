@@ -7,6 +7,7 @@ inputs:
   label:
     description: The left text of the badge
     required: true
+    default: ${{ github.job }}
   label-color:
     description: Hex or named color for the subject
     required: true
@@ -34,6 +35,10 @@ inputs:
     description: Set badge scale
     required: true
     default: 1
+  type:
+    description: Either workflow or custon
+    required: true
+    default: workflow
   badges_branch:
     description: Allow overriding default branch used to store badges
     required: true
@@ -78,7 +83,7 @@ runs:
       # Badge svg can accessed as steps.create_badge.outputs.badge
       id: create_badge
       shell: bash
-      run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }}
+      run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -i ${{ inputs.icon }} -c ${{ inputs.colour }} -t ${{ inputs.type }}
 
     - uses: actions/checkout@v4
       # Checkout the badges_branch

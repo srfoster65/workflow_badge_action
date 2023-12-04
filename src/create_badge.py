@@ -33,6 +33,12 @@ def process_command_line_arguments():
         help="The left hand badge text",
     )
     parser.add_argument(
+        "--label-colour",
+        "--label-color",
+        dest="labelColor",
+        help="The background label colour",
+    )
+    parser.add_argument(
         "-s",
         "--status",
         required=True,
@@ -50,7 +56,6 @@ def process_command_line_arguments():
         "-i",
         "--icon",
         dest="icon",
-        default="github",
         help="The icon to use",
     )
     parser.add_argument(
@@ -58,6 +63,13 @@ def process_command_line_arguments():
         "--path",
         dest="path",
         help="The path to save the badge to. Store badge in environment variable if not set",
+    )
+    parser.add_argument(
+        "-t",
+        "--type",
+        dest="type",
+        default="workflow",
+        help="The type of badge to create - workflow, percentage, custom",
     )
     return parser.parse_args()
 
@@ -88,16 +100,19 @@ def get_badge_status(args):
 
 def get_badgen_badge(args):
     """Generate badge from badgen.net"""
-    colour = get_badge_colour(args)
-    status = get_badge_status(args)
-    url = f"{BADGEN_URL}/{args.label}/{status}/{colour}"
-    params = {"icon": args.icon}
+    # colour = get_badge_colour(args)
+    # status = get_badge_status(args)
+    url = f"{BADGEN_URL}/{args.label}/{args.status}/{args.colour}"
+    params = {
+        key: getattr(args, key) for key in {"icon", "labelColor"} if getattr(args, key)
+    }
+    # params = {"icon": args.icon}
     response = requests.get(url, params=params)
     logger.info("Fetching badge from: %s", response.url)
     return response.text
 
 
-def write_env_data(fh, name, value):
+def write_data(fh, name, value):
     delimiter = uuid.uuid1()
     print(f"{name}<<{delimiter}", file=fh)
     print(value, file=fh)
@@ -113,7 +128,7 @@ def set_multiline_output(name, value):
         logger.info("GITHIB_OUTPUT not set. Using temp file:")
     logger.info("Writing badge to: %s", output_file)
     with open(output_file, "a") as fh:
-        write_env_data(fh, name, value)
+        write_data(fh, name, value)
 
 
 def write_badge(path, badge_svg):
@@ -122,10 +137,42 @@ def write_badge(path, badge_svg):
         fp.write(badge_svg)
 
 
+def get_workflow_badge(args):
+    logger.info("Generating workflow badge")
+    if args.status in OUTCOME_MAP:
+        setattr(args, "colour", get_badge_colour(args))
+        setattr(args, "status", get_badge_status(args))
+        setattr(args, "icon", "github")
+        return get_badgen_badge(args)
+    raise RuntimeError(f"Invalid status for workflow badge: {args.status}")
+
+
+def is_percentage(value):
+    return 0 <= value <= 100
+
+
+def get_percentage_badge(args):
+    logger.info("Generating percentage badge")
+    if is_percentage(args.status):
+        # todo Implement colour scaling
+        setattr(args, "icon", "github")
+        return get_badgen_badge(args)
+    raise RuntimeError(f"Invalid status for percentage badge: {args.status}")
+
+
 def main():
     logging.basicConfig(level=logging.INFO)
     args = process_command_line_arguments()
-    badge_svg = get_badgen_badge(args)
+    match args.type:
+        case "workflow":
+            badge_svg = get_workflow_badge(args)
+        case "percenatge":
+            badge_svg = get_percentage_badge(args)
+        case "custom":
+            logger.info("Generating custom badge")
+            badge_svg = get_badgen_badge(args)
+        case _:
+            raise RuntimeError(f"Invalid type: {args.type}")
     if args.path:
         write_badge(args.path, badge_svg)
     else:
