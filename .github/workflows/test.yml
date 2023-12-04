@@ -8,15 +8,15 @@ on:
   workflow_dispatch:
   
 jobs:
-  test:
-    name: test badge action
+  echo:
+    name: test echo
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Dummy step
-      id: dummy
+    - name: Echo command
+      id: echo_cmd
       shell: bash
       run: echo "Hello World"
 
