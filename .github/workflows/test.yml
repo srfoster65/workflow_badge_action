@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Echo command
-      id: echo_cmd
+      id: echo
       shell: bash
       run: echo "Hello World"
 
@@ -24,4 +24,4 @@ jobs:
       uses: srfoster65/workflow_badge_action@main
       with:
         label: echo
-        status: ${{ steps.dummy.outcome }}
+        status: ${{ steps.echo.outcome }}
