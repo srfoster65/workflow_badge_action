@@ -5,29 +5,82 @@ Action to create a badge for a github reusable workflow. When using reusable wor
 The service [badgen.net](https://badgen.net) is used to render the badge.
 
 
-Example Usage
+## Example Usage
+
+Given a workflow (workflow.yml) that executes on push events
 
 ```yaml
-name: Example Workflow
+# workflow.yml
+
+name: Test workflow badge action
 
 on:
+  push:
+    branches:
+    - '*'
+    - '!badges'
   workflow_dispatch:
+        
+jobs:
+
+  test:
+    name: test workflow badge
+    uses: ./.github/workflows/echo.yml
+
+```
+
+and a reusable workflow (echo.yml)
+
+```yaml
+# echo.yml
+name: test echo
+
+on:
+  workflow_call:
   
 jobs:
-  test:
-    - name: echo hello world
+  echo:
+    name: test echo
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Echo command
       id: echo
       shell: bash
-      run: echo "hello world"
+      run: echo "Hello World"
 
-    # Generage a badge for step with the id: echo
+    # Create badge for the preceding step
     - name: create badge
-      uses: srfoster65/workflow_badge_action@v1
+      uses: srfoster65/workflow_badge_action@main
       with:
-        label: echo  # The name of the label
+        label: ${{ github.job}}
         status: ${{ steps.echo.outcome }}
-      if: always()  # always run the step.
 
+```
+
+To apply to your workflow:
+
+in the main workflow, ensure the workflow does not run when commiting changes to the badges branch
+
+```yaml
+on:
+  push:
+    branches:
+    - '*'
+    - '!badges'
+
+```
+
+Then in the reusable workflow , call workflow_badge_action using the name of the job as the label and the outcome of the actual test case ("echo" in the example below) as the status.
+
+```yaml
+    - name: create badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        label: ${{ github.job}}
+        status: ${{ steps.echo.outcome }}
 ```
 
 ## Input Options
@@ -35,7 +88,7 @@ jobs:
 ### Label
 
 Required parameter.  
-It is the text applied to the left hand side of the badge, and is also used to name the badge.
+The text applied to the left hand side of the badge, and is also used to name the badge.
 
 ### Status
 
