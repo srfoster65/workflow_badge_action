@@ -23,5 +23,5 @@ jobs:
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
       with:
-        label: ${{ github.job.name}}
+        label: ${{ github.job}}
         status: ${{ steps.echo.outcome }}
