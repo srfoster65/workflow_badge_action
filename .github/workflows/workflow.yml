@@ -1,0 +1,14 @@
+
+name: Test workflow badge action
+
+on:
+  push:
+    branches:
+    - '*'
+    - '!badges'
+        
+jobs:
+
+  test:
+    name: test workflow badge
+    uses: ./.github/workflows/echo.yml
