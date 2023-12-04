@@ -3,7 +3,6 @@ Script to construct and call a Badgen URL and fetch the resultant badge svg data
 """
 
 from argparse import ArgumentParser
-from numbers import Number
 from os import environ
 import requests
 import logging
