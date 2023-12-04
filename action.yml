@@ -7,7 +7,6 @@ inputs:
   label:
     description: The left text of the badge
     required: true
-    default: ${{ github.job }}
   label-colour:
     description: Hex or named color for the subject
     required: true

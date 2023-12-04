@@ -1,4 +1,4 @@
-name: test
+name: test echo
 
 on:
   push:
@@ -23,5 +23,5 @@ jobs:
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
       with:
-        label: echo
+        label: ${{ github.job.name}}
         status: ${{ steps.echo.outcome }}
