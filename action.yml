@@ -82,7 +82,7 @@ runs:
       # Badge svg can accessed as steps.create_badge.outputs.badge
       id: create_badge
       shell: bash
-      run: python src/create_badge.py -l ${{ inputs.label }} -s ${{ inputs.status }} -i ${{ inputs.icon }} -c ${{ inputs.colour }} -t ${{ inputs.type }}
+      run: python "${{ github.action_path }}/src/create_badge.py" -l ${{ inputs.label }} -s ${{ inputs.status }} -i ${{ inputs.icon }} -c ${{ inputs.colour }} -t ${{ inputs.type }}
 
     - uses: actions/checkout@v4
       # Checkout the badges_branch
