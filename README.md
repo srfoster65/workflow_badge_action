@@ -1,11 +1,11 @@
 # Overview
 
-Action to create a badge for a github reusable workflow. When using reusable workflows github does not create a workflow badge. This action will create a badge for the workflow and commit the badge to git for reference in README.md.
+Action to create a badge for a github reusable workflow. When using reusable workflows github does not create a workflow badge. This action will create a badge for the workflow and commit the badge to git.
 
 The service [badgen.net](https://badgen.net) is used to render the badge.
 
 
-## Example Usage
+## Simple Usage
 
 Given a workflow (workflow.yml) that executes on push events
 
@@ -19,10 +19,8 @@ on:
     branches:
     - '*'
     - '!badges'
-  workflow_dispatch:
         
 jobs:
-
   test:
     name: test workflow badge
     uses: ./.github/workflows/echo.yml
@@ -60,9 +58,13 @@ jobs:
 
 ```
 
+The above example will create a workflow badge, and commit the badge to the badges branch as **[working_branch]/echo.svg**
+
 To apply to your workflow:
 
 in the main workflow, ensure the workflow does not run when commiting changes to the badges branch
+
+e.g.
 
 ```yaml
 on:
@@ -73,22 +75,48 @@ on:
 
 ```
 
-Then in the reusable workflow , call workflow_badge_action using the name of the job as the label and the outcome of the actual test case ("echo" in the example below) as the status.
+Then in the reusable workflow, call workflow_badge_action using the name of the job as the label and the outcome of the actual test case as the status.
 
 ```yaml
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
       with:
         label: ${{ github.job}}
-        status: ${{ steps.echo.outcome }}
+        status: ${{ steps.[step id].outcome }}
 ```
 
 ## Input Options
 
+### Type
+
+The type of badge to generate:
+
+- workflow (default)
+- percentage
+- custom
+
+#### Workflow
+
+A workflow badge expects the status value to be an output from a step outcome. The status value is translated to the value/colour rendered in the badge as follows:
+
+- success: passing - green
+- failure: failing - red
+- skipped: failing - red
+- cancelled: cancelled - grey
+
+#### Percentage
+
+A percentage badge expects the status to be a numeric value in the range: 0 <= value <= 100
+The value is rendered as the badge status, with the colour being set in the range of red, through orange to green depending upon the percentage.
+
+#### Custom
+
+A custom badge has the parameters passed directly to badgen.net for rendering.
+
 ### Label
 
 Required parameter.  
-The text applied to the left hand side of the badge, and is also used to name the badge.
+The text applied to the left hand side of the badge. This value is also used to name the badge.svg file that is committed to git.
 
 ### Status
 
