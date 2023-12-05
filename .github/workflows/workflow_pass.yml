@@ -5,7 +5,7 @@ on:
   
 jobs:
   workflow_pass:
-    name: create badge
+    name: passing workflow badge
     runs-on: ubuntu-latest
     concurrency:
       group: badge

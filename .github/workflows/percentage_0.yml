@@ -5,12 +5,14 @@ on:
   
 jobs:
   percent_0:
-    name: create badge
+    name: percent 0 badge
     runs-on: ubuntu-latest
     concurrency:
       group: badge
 
     steps:
+    - uses: actions/checkout@v4
+
     - name: create badge
       uses: srfoster65/workflow_badge_action@main
       with:
