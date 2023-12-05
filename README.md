@@ -172,15 +172,13 @@ The badge can be referenced using the following URL:
 https://raw.githubusercontent.com/[github account]/[github project]/badges/[*branch*]/[*label*].svg
 
 e.g.  
-Use the following markdown in README.md to render a badge named test, on main.
+Use the following markdown in README.md to render a badge named workflow_passing, on main.
 
 ```text
-![svg badge](https://raw.githubusercontent.com/srfoster65/workflow_badge_action/badges/main/test.svg)
+![svg badge](https://raw.githubusercontent.com/srfoster65/workflow_badge_action/badges/main/workflow_passing.svg)
 ```
 
-![svg badge](https://raw.githubusercontent.com/srfoster65/workflow_badge_action/badges/main/test.svg)
-
-This action uses [badge-action](https://github.com/marketplace/actions/badge-action) to generate the svg image.
+![svg badge](https://raw.githubusercontent.com/srfoster65/workflow_badge_action/badges/main/workflow_passing.svg)
 
 ### Note
 
