@@ -95,12 +95,12 @@ The text applied to the left hand side of the badge, and is also used to name th
 Required parameter.  
 If status is a known output from a workflow outcome, the text and colour of the badge will be set as follows.
 
-| Status   | Badge Status | Colour |
-| -------- | ------------ | ------ |
-| success  | Passing      | green  |
-| failure  | Failing      | red    |
-|cancelled | Cancelled    | grey   |
-| skipped  | Skipped      | grey   |
+| Status    | Badge Status | Colour |
+| --------- | ------------ | ------ |
+| success   | passing      | green  |
+| failure   | failing      | red    |
+| cancelled | cancelled    | grey   |
+| skipped   | skipped      | grey   |
 
 Any other value will be displayed without modification
 
@@ -153,3 +153,16 @@ Use the following markdown in README.md to render a badge named test, on main.
 ![svg badge](https://raw.githubusercontent.com/srfoster65/workflow_badge_action/badges/main/test.svg)
 
 This action uses [badge-action](https://github.com/marketplace/actions/badge-action) to generate the svg image.
+
+### Note
+
+If your workflow run fails with the following error:
+
+```text
+Error: Error: Pushing to https://github.com/[REPO]
+remote: Permission to [REPO].git denied to github-actions[bot].
+fatal: unable to access 'https://github.com/[REPO]/': The requested URL returned error: 403
+```
+
+be sure to have enabled write access for actions under:  
+Settings -> Actions -> General -> Workflow Settings
