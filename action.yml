@@ -113,10 +113,11 @@ runs:
       with:
         message: "Add/Update badge"
         add: ${{ steps.badge_info.outputs.badge_path }}
+        push: true
 
-    - name: Push badge commit
-      # Push the badge to origin on the badges branch
-      uses: ad-m/github-push-action@master
-      if: ${{ success() }}
-      with:
-        branch: ${{ steps.badge_info.outputs.badges_branch }}
+    # - name: Push badge commit
+    #   # Push the badge to origin on the badges branch
+    #   uses: ad-m/github-push-action@master
+    #   if: ${{ success() }}
+    #   with:
+    #     branch: ${{ steps.badge_info.outputs.badges_branch }}
