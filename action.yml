@@ -113,7 +113,8 @@ runs:
       with:
         message: "Add/Update badge"
         add: ${{ steps.badge_info.outputs.badge_path }}
-        push: true
+        # push: true
+        pull: '--rebase'
 
     # - name: Push badge commit
     #   # Push the badge to origin on the badges branch
