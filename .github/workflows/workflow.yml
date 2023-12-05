@@ -10,6 +10,23 @@ on:
         
 jobs:
 
-  test:
+  workflow_passing:
     name: test workflow badge
-    uses: ./.github/workflows/echo.yml
+    uses: ./.github/workflows/workflow_pass.yml
+
+  workflow_failing:
+    name: test workflow badge
+    uses: ./.github/workflows/workflow_fail.yml
+
+  percentage_0:
+    name: test workflow badge
+    uses: ./.github/workflows/percentage_0.yml
+
+  percentage_50:
+    name: test workflow badge
+    uses: ./.github/workflows/percentage_50.yml
+
+  percentage_100:
+    name: test workflow badge
+    uses: ./.github/workflows/percentage_100.yml
+                
