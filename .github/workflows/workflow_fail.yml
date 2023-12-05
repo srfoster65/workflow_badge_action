@@ -1,0 +1,18 @@
+name: workflow fail
+
+on:
+  workflow_call:
+  
+jobs:
+  workflow_fail:
+    name: test workflow fail
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: create badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        label: ${{ github.job}}
+        status: failure

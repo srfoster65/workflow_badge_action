@@ -1,0 +1,19 @@
+name: 50 percent
+
+on:
+  workflow_call:
+  
+jobs:
+  percent_50:
+    name: test 50 percent
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: create badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        type: percentage
+        label: ${{ github.job}}
+        status: 50
