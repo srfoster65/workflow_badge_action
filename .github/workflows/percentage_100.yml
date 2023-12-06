@@ -7,9 +7,6 @@ jobs:
   percent_100:
     name: percent 100 badge
     runs-on: ubuntu-latest
-    concurrency:
-      group: badge
-      cancel-in-progress: false
 
     steps:
     - uses: actions/checkout@v4

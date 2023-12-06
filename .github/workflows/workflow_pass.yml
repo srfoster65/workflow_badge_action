@@ -7,9 +7,6 @@ jobs:
   workflow_pass:
     name: passing workflow badge
     runs-on: ubuntu-latest
-    concurrency:
-      group: badge
-      cancel-in-progress: false
       
     steps:
     - uses: actions/checkout@v4
