@@ -1,3 +1,5 @@
+# Cannot use reusable workflows with local actions
+# As action commits to git all badges must be created sequentially
 
 name: Test workflow badge action
 
@@ -7,7 +9,7 @@ on:
     - '*'
     - '!badges'
   workflow_dispatch:
-        
+
 jobs:
   create_badges:
     name: test badges
@@ -16,17 +18,36 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: workflow_passing
-      uses: ./.github/workflows/workflow_pass.yml
-    
-    - name: workflow_failing
-      uses: ./.github/workflows/workflow_fail.yml
+    - name: workflow passing badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        label: ${{ github.job}}
+        status: success
 
-    - name: percentage_50
-      uses: ./.github/workflows/percentage_0.yml
+    - name: workflow failing badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        label: ${{ github.job}}
+        status: failure
 
-    - name: percentage_50
-      uses: ./.github/workflows/percentage_50.yml
+    - name: percent 0 badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        type: percentage
+        label: ${{ github.job}}
+        status: 0
 
-    - name: percentage_100
-      uses: ./.github/workflows/percentage_100.yml
+    - name: percent 50 badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        type: percentage
+        label: ${{ github.job}}
+        status: 
+
+    - name: percent 100 badge
+      uses: srfoster65/workflow_badge_action@main
+      with:
+        type: percentage
+        label: ${{ github.job}}
+        status: 100
+  
