@@ -42,7 +42,7 @@ jobs:
       with:
         type: percentage
         label: ${{ github.job}}
-        status: 
+        status: 50
 
     - name: percent 100 badge
       uses: srfoster65/workflow_badge_action@main
