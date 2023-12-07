@@ -114,6 +114,7 @@ runs:
       with:
         message: "Add/Update badge"
         add: ${{ steps.badge_info.outputs.badge_path }}
+        new_branch: ${{ inputs.label }}
         # push: true
         # pull: true
 
