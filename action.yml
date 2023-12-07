@@ -46,6 +46,7 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: actions/checkout@v4
 
     # Get current banch name (for use as dest directory when committing badge)
     - name: Extract working branch name
