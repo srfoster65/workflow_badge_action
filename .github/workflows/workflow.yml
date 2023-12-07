@@ -21,33 +21,33 @@ jobs:
     - name: workflow passing badge
       uses: srfoster65/workflow_badge_action@main
       with:
-        label: ${{ github.job}}
+        label: workflow_passing
         status: success
 
     - name: workflow failing badge
       uses: srfoster65/workflow_badge_action@main
       with:
-        label: ${{ github.job}}
+        label: workflow_failing
         status: failure
 
     - name: percent 0 badge
       uses: srfoster65/workflow_badge_action@main
       with:
         type: percentage
-        label: ${{ github.job}}
+        label: percentage_0
         status: 0
 
     - name: percent 50 badge
       uses: srfoster65/workflow_badge_action@main
       with:
         type: percentage
-        label: ${{ github.job}}
+        label: percentage_50
         status: 50
 
     - name: percent 100 badge
       uses: srfoster65/workflow_badge_action@main
       with:
         type: percentage
-        label: ${{ github.job}}
+        label: percentage_100
         status: 100
   
